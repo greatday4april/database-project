@@ -19,6 +19,9 @@ class Vehicle(models.Model):
     def __str__(self) -> str:
         return '{} {}: {}'.format(self.make, self.model, self.vin)
 
+    class Meta:
+        db_table = "vehicle"
+
 
 class Service(models.Model):
     labor_time = models.DurationField(null=False)
@@ -28,11 +31,20 @@ class Service(models.Model):
     type = models.CharField(
         max_length=20, choices=ServiceType.choices, db_index=True)
 
+    class Meta:
+        db_table = "service"
+
 
 class ServicePackage(models.Model):
     name = models.CharField(null=False, max_length=30, primary_key=True)
     car_age = models.IntegerField(null=True)
     service_names = models.JSONField()
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        db_table = "service_package"
 
 
 class Customer(models.Model):
@@ -40,6 +52,12 @@ class Customer(models.Model):
     email = models.EmailField(null=True)
     name = models.CharField(max_length=60, null=False, db_index=True)
     phone_number = models.CharField(max_length=20, null=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        db_table = "customer"
 
 
 class PurchaseBill(models.Model):
@@ -50,6 +68,9 @@ class PurchaseBill(models.Model):
                             null=False, related_name='purchased_vehicle', db_index=True)
     customer = models.ForeignKey(Customer, on_delete=models.DO_NOTHING,
                                  null=False, related_name='purchase_customer', db_index=True)
+
+    class Meta:
+        db_table = "purchase_bill"
 
 
 class ServiceAppointment(models.Model):
@@ -64,6 +85,9 @@ class ServiceAppointment(models.Model):
     service_package = models.ForeignKey(ServicePackage, on_delete=models.DO_NOTHING,
                                         null=True, related_name='service_package', default=None, db_index=True)
 
+    class Meta:
+        db_table = "service_appointment"
+
 
 class ServicePerformed(models.Model):
     appt = models.ForeignKey(ServiceAppointment, on_delete=models.DO_NOTHING,
@@ -71,3 +95,6 @@ class ServicePerformed(models.Model):
     service = models.ForeignKey(
         Service, on_delete=models.DO_NOTHING, null=False, related_name='service_for_appt', db_index=True)
     id = models.AutoField(primary_key=True)
+
+    class Meta:
+        db_table = "service_performed"
