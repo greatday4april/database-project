@@ -28,9 +28,17 @@ class ServiceAppointmentSerializer(serializers.ModelSerializer):
     total_cost = serializers.SerializerMethodField()
 
     def get_total_cost(self, appt: ServiceAppointment):
-        return '${}'.format(sum(line_item['cost'] for line_item in self.get_line_items(appt)))
+        return '${}'.format(sum(line_item['cost'] for line_item in self.get_line_items_impl(appt)))
 
     def get_line_items(self, appt: ServiceAppointment):
+        line_items = self.get_line_items_impl(appt)
+        new_line_items = []
+        for value in line_items:
+            new_line_items.append(value)
+            new_line_items[-1]['labor_time'] = str(value['labor_time'])
+        return new_line_items
+
+    def get_line_items_impl(self, appt: ServiceAppointment):
         names = appt.service_package.service_names
 
         services = Service.objects.filter(name__in=names).all()
@@ -41,7 +49,7 @@ class ServiceAppointmentSerializer(serializers.ModelSerializer):
             line_items.append({
                 "item": service.name,
                 "type": str(service.type),
-                "labor_time": str(service.labor_time),
+                "labor_time": service.labor_time,
                 "cost": service.cost
             })
 
@@ -50,23 +58,19 @@ class ServiceAppointmentSerializer(serializers.ModelSerializer):
             line_items.append({
                 "item": service.name,
                 "type": str(service.type),
-                "labor_time": str(service.labor_time),
+                "labor_time": service.labor_time,
                 "cost": service.cost
             })
 
         return line_items
 
     def get_estimated_time(self, appt: ServiceAppointment):
-        names = appt.service_package.service_names
-        services = ServicePackage.objects.filter(name__in=names)
-        services_performed = ServicePerformed.objects.filter(appt=appt)
+        labor_times = [
+            line_item['labor_time'] for line_item in self.get_line_items_impl(appt)
+        ]
         delta = datetime.timedelta()
-        for service in services:
-            delta += service.labor_time
-
-        for service_performed in services_performed:
-            delta += service_performed.service.labor_time
-
+        for labor_time in labor_times:
+            delta += labor_time
         return str(delta)
 
     class Meta:

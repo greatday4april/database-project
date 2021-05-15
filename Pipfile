@@ -28,4 +28,4 @@ django-debug-toolbar = "*"
 django-filter = "*"
 names = "*"
 faker-vehicle = "*"
-mysqlclient = "*
+mysqlclient = "*"
