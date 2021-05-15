@@ -88,6 +88,9 @@ class ServiceAppointment(models.Model):
     service_package = models.ForeignKey(ServicePackage, on_delete=models.DO_NOTHING,
                                         null=True, related_name='service_package', default=None, db_index=True)
 
+    def __str__(self) -> str:
+        return 'appointment with id: {}, and customer {}'.format(self.appt_id, self.customer.name)
+
     class Meta:
         db_table = "service_appointment"
 
