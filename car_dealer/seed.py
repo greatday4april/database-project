@@ -33,7 +33,7 @@ def seed_database():
     Vehicle.objects.all().delete()
     Customer.objects.all().delete()
 
-    for _i in range(10):
+    for _i in range(50):
         digits = [digit for digit in string.digits]
         phone_number_str = ''.join([random.choice(digits) for _i in range(10)])
         Customer.objects.create(
@@ -42,8 +42,9 @@ def seed_database():
             phone_number=phone_number_str,
         )
 
+    vehicles = [fake.vehicle_object() for _i in range(10)]
     for _i in range(100):
-        vehicle = fake.vehicle_object()
+        vehicle = random.choice(vehicles)
         cost = random.randint(100, 1000) * 100
         vin = random_str(15)
         Vehicle.objects.create(
@@ -62,8 +63,8 @@ def seed_database():
 
         Service.objects.create(
             name=service_name,
-            cost=random.randint(10, 5000),
-            labor_time=datetime.timedelta(minutes=random.randint(20, 120)),
+            cost=random.randint(10, 200),
+            labor_time=datetime.timedelta(minutes=random.randint(5, 20)),
             type=random.choice(ServiceType.choices)
         )
 

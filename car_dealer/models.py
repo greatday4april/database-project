@@ -31,6 +31,9 @@ class Service(models.Model):
     type = models.CharField(
         max_length=20, choices=ServiceType.choices, db_index=True)
 
+    def __str__(self) -> str:
+        return '{}: {}, ${}'.format(self.type, self.name, self.cost)
+
     class Meta:
         db_table = "service"
 
@@ -61,7 +64,7 @@ class Customer(models.Model):
 
 
 class PurchaseBill(models.Model):
-    date = models.DateField(auto_now=True, db_index=True)
+    date = models.DateField(db_index=True)
     price = models.IntegerField(null=False)
     bill_id = models.AutoField(primary_key=True)
     vin = models.ForeignKey(Vehicle, on_delete=models.DO_NOTHING,
@@ -75,9 +78,9 @@ class PurchaseBill(models.Model):
 
 class ServiceAppointment(models.Model):
     appt_id = models.AutoField(primary_key=True)
-    scheduled_time = models.TimeField(null=False, db_index=True)
-    dropoff_time = models.TimeField(null=True)
-    pickup_time = models.TimeField(null=True)
+    scheduled_time = models.DateTimeField(null=False, db_index=True)
+    dropoff_time = models.DateTimeField(null=True)
+    pickup_time = models.DateTimeField(null=True)
     customer = models.ForeignKey(Customer, on_delete=models.DO_NOTHING,
                                  null=False, related_name='served_customer', db_index=True)
     vin = models.ForeignKey(Vehicle, on_delete=models.DO_NOTHING,

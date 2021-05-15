@@ -22,6 +22,10 @@ from car_dealer import views
 router = routers.DefaultRouter()
 router.register(r'customers', views.CustomerViewSet, 'customer')
 router.register(r'bills', views.PurchaseBillViewSet, 'bill')
+router.register(r'service_appointments', views.ServiceAppointmentViewSet, 'service_appointment')
+router.register(r'service_items',
+                views.ServiceItemViewSet, 'service_item')
+router.register(r'sale_stats', views.SaleStatsViewSet, basename='sale_stat')
 
 urlpatterns = [
     path('', RedirectView.as_view(url='api/')),
