@@ -1,0 +1,30 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+flake8 = "*"
+pycodestyle = "*"
+autopep8 = "*"
+
+[packages]
+psycopg2-binary = "*"
+django = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
+ipykernel = "*"
+requests = "*"
+geocoder = "*"
+gunicorn = "*"
+install = "*"
+django-heroku = "*"
+ratelimit = "*"
+backoff = "*"
+django-ipware = "*"
+sklearn = "*"
+ordered-set = "*"
+django-debug-toolbar = "*"
+django-filter = "*"
+names = "*"
+faker-vehicle = "*"
